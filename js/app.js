@@ -247,3 +247,21 @@ btnBorrar.addEventListener('click', async () => {
         }
     }
 });
+const imagenesGaleria = document.querySelectorAll('.img-galeria');
+
+imagenesGaleria.forEach(img => {
+    img.addEventListener('click', function() {
+        // 1. Obtenemos la fuente (src) de la imagen clickeada
+        const rutaImagen = this.src;
+        
+        // 2. La ponemos en el modal grande
+        const imgZoom = document.getElementById('img-zoom');
+        if(imgZoom) {
+            imgZoom.src = rutaImagen;
+            
+            // 3. Abrimos el modal
+            const modalFoto = new bootstrap.Modal(document.getElementById('modalFoto'));
+            modalFoto.show();
+        }
+    });
+});

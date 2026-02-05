@@ -1,4 +1,4 @@
-
+/* css/styles.css - VERSIÓN DEFINITIVA (Fotos Grandes y Zoom) */
 
 /* 1. IMPORTAR FUENTE (Poppins) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -21,121 +21,166 @@ body {
 h1, h2, h3, h4, h5 {
     font-weight: 600;
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Sombra suave para leer mejor */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
+
 /* 4. EFECTO CRISTAL (GLASSMORPHISM) */
-/* Esto hace que el cuadro del login y el calendario parezcan de vidrio */
 .card, .container-app {
-    background: rgba(30, 41, 59, 0.7) !important; /* Color oscuro transparente */
-    backdrop-filter: blur(12px); /* Efecto borroso detrás del vidrio */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Borde muy fino */
-    border-radius: 20px; /* Esquinas redondeadas */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Sombra profunda */
+    background: rgba(30, 41, 59, 0.7) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     padding: 20px;
-    margin-top: 20px;
 }
 
-/* 5. FORZAR AL CALENDARIO A SER MODO OSCURO */
-/* FullCalendar es rebelde, hay que obligarlo a cambiar colores */
+/* 5. ESTILOS DE LA GALERÍA (CARRUSEL) */
 
-/* Color de los números de los días y los nombres (Lun, Mar...) */
-.fc .fc-col-header-cell-cushion,
-.fc .fc-daygrid-day-number {
-    color: #e2e8f0 !important; /* Blanco hueso */
-    text-decoration: none;
+/* Altura de las fotos en PC */
+.carousel-item img {
+    height: 500px !important; /* Fotos grandes e impactantes */
+    object-fit: cover; /* Evita que se deformen */
+    transition: transform 0.4s ease; /* Suavidad al hacer zoom */
 }
 
-/* Color de las líneas de la cuadrícula */
+/* Efecto al pasar el mouse por las fotos (Clase que pusimos en HTML) */
+.img-galeria {
+    cursor: pointer; /* Manita */
+}
+.img-galeria:hover {
+    transform: scale(1.02); /* Pequeño zoom elegante */
+    opacity: 0.95;
+}
+
+/* --- ESTILOS PREMIUM DEL CALENDARIO --- */
+
+/* 1. Quitar bordes feos de la cuadrícula */
 .fc-theme-standard td, 
-.fc-theme-standard th {
-    border-color: rgba(255, 255, 255, 0.1) !important; /* Líneas casi invisibles */
+.fc-theme-standard th,
+.fc-scrollgrid {
+    border-color: rgba(255, 255, 255, 0.05) !important; /* Casi invisibles */
 }
 
-/* Efecto al pasar el mouse por un día */
+/* 2. Encabezados de días (Lun, Mar...) */
+.fc-col-header-cell {
+    background-color: rgba(255, 255, 255, 0.02); /* Fondo sutil */
+    padding: 10px 0 !important;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #94a3b8 !important; /* Gris azulado elegante */
+    border-bottom: none !important;
+}
+
+/* 3. Las Celdas de los días */
+.fc-daygrid-day {
+    transition: background-color 0.2s;
+}
 .fc-daygrid-day:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Brillo al pasar mouse */
 }
 
-/* Botones del calendario (Mes, Hoy, Flechas) */
-.fc-button {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+/* 4. Los Eventos (Las barras de reserva) */
+.fc-event {
     border: none !important;
-    color: white !important;
+    border-radius: 8px !important; /* Bordes redondeados modernos */
+    padding: 4px 8px !important;   /* Más gorditos */
+    margin: 2px 5px !important;    /* Separados de los bordes */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Sombrita flotante */
+    font-size: 0.85rem !important;
+    font-weight: 500;
+}
+
+/* 5. El día de HOY */
+.fc-day-today {
+    background-color: rgba(212, 175, 55, 0.1) !important; /* Dorado muy suave de fondo */
+}
+/* El numerito del día de hoy */
+.fc-day-today .fc-daygrid-day-number {
+    background-color: #d4af37;
+    color: #0f172a !important;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Círculo perfecto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px;
+}
+
+/* 6. Título del Mes (Febrero 2026) */
+.fc-toolbar-title {
+    font-size: 1.8rem !important;
+    font-weight: 300 !important; /* Letra fina elegante */
     text-transform: capitalize;
-}
-.fc-button-active {
-    background-color: #d4af37 !important; /* Dorado cuando está activo */
-    color: black !important;
+    letter-spacing: 1px;
 }
 
-/* 6. INPUTS Y FORMULARIOS (Para que no sean blancos brillantes) */
+/* 7. Botones de navegación (< >) */
+.fc-button-primary {
+    background-color: transparent !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    color: white !important;
+    border-radius: 50px !important;
+    padding: 5px 15px !important;
+}
+.fc-button-primary:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+    border-color: white !important;
+}
+
+/* 7. FORMULARIOS Y BOTONES */
 .form-control {
-    background-color: rgba(0, 0, 0, 0.3); /* Fondo oscuro */
+    background-color: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white !important; /* Texto blanco al escribir */
+    color: white !important;
 }
-
 .form-control:focus {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
-    border-color: #d4af37; /* Borde dorado al seleccionar */
+    border-color: #d4af37;
     box-shadow: none;
 }
-
-/* 7. BOTONES PRINCIPALES (Estilo Lujo) */
 .btn-primary {
-    background-color: #d4af37; /* Dorado playa */
+    background-color: #d4af37;
     border: none;
-    color: #0f172a; /* Letra oscura para contraste */
+    color: #0f172a;
     font-weight: 600;
     padding: 10px 25px;
-    border-radius: 50px; /* Botones redonditos */
+    border-radius: 50px;
 }
-
 .btn-primary:hover {
-    background-color: #fcd34d; /* Dorado más claro al pasar el mouse */
+    background-color: #fcd34d;
     color: #0f172a;
-    transform: translateY(-2px); /* Pequeña animación de elevación */
+    transform: translateY(-2px);
     transition: all 0.3s;
 }
 
-.btn-danger {
-    border-radius: 50px;
-   } 
-
-   /* css/styles.css - Agrega esto al final o modifica si ya existe */
-
-/* 1. LIMITAR EL ANCHO (Para que no ocupe toda la pantalla en PC) */
-.container-app {
-    /* ... (mantén lo que ya tenías de glassmorphism: background, backdrop-filter, etc.) ... */
-    
-    /* 👇 AGREGAMOS ESTO PARA CONTROLAR EL TAMAÑO 👇 */
-    max-width: 900px; /* Ancho máximo elegante */
-    margin-left: auto; /* Auto margen izquierda */
-    margin-right: auto; /* Auto margen derecha = CENTRADO */
-}
-
-/* 2. AJUSTAR ALTURA DEL CARRUSEL */
-/* Para que no sea tan alto y se vea bien en celular */
-.carousel-item img {
-    height: 250px !important; /* Reducimos de 300 a 250px */
-    object-fit: cover;
-}
-
-/* 3. ARREGLO PARA CELULARES (Evitar zoom y deformación) */
-/* Esto evita que el navegador haga zoom cuando tocas un input */
-input, select, textarea {
-    font-size: 16px !important; 
-}
-
-/* Ajuste específico para el calendario en móvil */
+/* 8. MÓVIL (Pantallas pequeñas) */
 @media (max-width: 768px) {
-    .fc-toolbar-title {
-        font-size: 1.2rem !important; /* Título del mes más pequeño */
+    
+    /* Fotos más pequeñas en celular para no tapar todo */
+    .carousel-item img {
+        height: 300px !important; 
     }
+    
+    /* Calendario ocupa más ancho en celular */
+    .container-app {
+        padding: 15px; 
+    }
+    
+    /* Títulos del calendario más grandes para leer bien con el dedo */
+    .fc-toolbar-title {
+        font-size: 1.2rem !important;
+    }
+    
     .fc-header-toolbar {
-        flex-direction: column; /* Botones arriba, título abajo para que quepan */
+        flex-direction: column;
         gap: 10px;
     }
+}
+
+/* 9. FIX ZOOM IPHONE */
+input, select, textarea {
+    font-size: 16px !important; 
 }
