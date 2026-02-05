@@ -1,0 +1,105 @@
+/* css/styles.css */
+
+/* 1. IMPORTAR FUENTE (Poppins) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* 2. ESTILOS DEL CUERPO (Fondo "Dark Mode") */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0f172a; /* Azul marino profundo */
+    color: #f1f5f9; /* Texto blanco suave */
+    
+    /* Imagen de fondo con capa oscura encima */
+    background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1473116763249-563815b507d6?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* 3. TÍTULOS */
+h1, h2, h3, h4, h5 {
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Sombra suave para leer mejor */
+}
+/* 4. EFECTO CRISTAL (GLASSMORPHISM) */
+/* Esto hace que el cuadro del login y el calendario parezcan de vidrio */
+.card, .container-app {
+    background: rgba(30, 41, 59, 0.7) !important; /* Color oscuro transparente */
+    backdrop-filter: blur(12px); /* Efecto borroso detrás del vidrio */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borde muy fino */
+    border-radius: 20px; /* Esquinas redondeadas */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); /* Sombra profunda */
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* 5. FORZAR AL CALENDARIO A SER MODO OSCURO */
+/* FullCalendar es rebelde, hay que obligarlo a cambiar colores */
+
+/* Color de los números de los días y los nombres (Lun, Mar...) */
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number {
+    color: #e2e8f0 !important; /* Blanco hueso */
+    text-decoration: none;
+}
+
+/* Color de las líneas de la cuadrícula */
+.fc-theme-standard td, 
+.fc-theme-standard th {
+    border-color: rgba(255, 255, 255, 0.1) !important; /* Líneas casi invisibles */
+}
+
+/* Efecto al pasar el mouse por un día */
+.fc-daygrid-day:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+/* Botones del calendario (Mes, Hoy, Flechas) */
+.fc-button {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    color: white !important;
+    text-transform: capitalize;
+}
+.fc-button-active {
+    background-color: #d4af37 !important; /* Dorado cuando está activo */
+    color: black !important;
+}
+
+/* 6. INPUTS Y FORMULARIOS (Para que no sean blancos brillantes) */
+.form-control {
+    background-color: rgba(0, 0, 0, 0.3); /* Fondo oscuro */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white !important; /* Texto blanco al escribir */
+}
+
+.form-control:focus {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-color: #d4af37; /* Borde dorado al seleccionar */
+    box-shadow: none;
+}
+
+/* 7. BOTONES PRINCIPALES (Estilo Lujo) */
+.btn-primary {
+    background-color: #d4af37; /* Dorado playa */
+    border: none;
+    color: #0f172a; /* Letra oscura para contraste */
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 50px; /* Botones redonditos */
+}
+
+.btn-primary:hover {
+    background-color: #fcd34d; /* Dorado más claro al pasar el mouse */
+    color: #0f172a;
+    transform: translateY(-2px); /* Pequeña animación de elevación */
+    transition: all 0.3s;
+}
+
+.btn-danger {
+    border-radius: 50px;
+   } 
