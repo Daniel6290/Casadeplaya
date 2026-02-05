@@ -1,4 +1,4 @@
-// js/app.js - VERSIÓN CON SEGURIDAD DE PROPIETARIO
+// js/app.js - VERSIÓN CON SWEETALERT Y MEJORA MÓVIL
 
 // 1. IMPORTS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -7,7 +7,7 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 2. CONFIGURACIÓN (¡Tus llaves reales!)
+// 2. CONFIGURACIÓN (Tus llaves)
 const firebaseConfig = {
   apiKey: "AIzaSyCK24jfAypi_5cbpxUAoRqm5GpD0AztLmo",
   authDomain: "casadeplaya-familia.firebaseapp.com",
@@ -17,12 +17,11 @@ const firebaseConfig = {
   appId: "1:8636762795:web:a88b8679e37ee03d6985ee"
 };
 
-// 3. INICIALIZAR
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 4. REFERENCIAS DOM
+// 3. REFERENCIAS DOM
 const sectionLogin = document.getElementById('section-login');
 const sectionApp = document.getElementById('section-app');
 const formLogin = document.getElementById('form-login');
@@ -34,22 +33,28 @@ const userName = document.getElementById('user-name');
 const btnGuardar = document.getElementById('btn-guardar');
 const btnBorrar = document.getElementById('btn-borrar');
 
-// 5. LOGIN
+// 4. LOGIN CON SWEETALERT ERROR
 formLogin.addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
         await signInWithEmailAndPassword(auth, txtEmail.value, txtPassword.value);
     } catch (error) {
-        msgError.innerText = "Error: " + error.message;
+        // Alerta bonita de error
+        Swal.fire({
+            icon: 'error',
+            title: 'Ups...',
+            text: 'Correo o contraseña incorrectos',
+            confirmButtonColor: '#d4af37'
+        });
     }
 });
 
-// 6. SESIÓN
+// 5. SESIÓN
 onAuthStateChanged(auth, (user) => {
     if (user) {
         sectionLogin.classList.add('d-none');
         sectionApp.classList.remove('d-none');
-        userName.innerText = user.email;
+        userName.innerText = user.email.split('@')[0]; // Solo el nombre antes del @
         setTimeout(() => { initCalendar(); }, 100);
     } else {
         sectionApp.classList.add('d-none');
@@ -59,7 +64,7 @@ onAuthStateChanged(auth, (user) => {
 
 btnLogout.addEventListener('click', async () => { await signOut(auth); });
 
-// 7. CALENDARIO
+// 6. CALENDARIO MEJORADO
 let calendar;
 
 function initCalendar() {
@@ -74,14 +79,19 @@ function initCalendar() {
         initialView: 'dayGridMonth',
         locale: 'es',
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next', // Quitamos 'today' para ahorrar espacio en móvil
             center: 'title',
-            right: 'dayGridMonth,listWeek'
+            right: '' // Quitamos vistas extra para simplificar
         },
-        height: 650,
+        
+        // 👇 CAMBIO IMPORTANTE PARA MÓVIL 👇
+        height: 'auto', // Se adapta al contenido, evita scroll doble
+        contentHeight: 'auto', 
+        aspectRatio: 1.5, // Intenta mantener proporción rectangular
+        
         selectable: true, 
         
-        // A. CREAR: Al tocar días vacíos
+        // Select
         select: function(info) {
             document.getElementById('input-fecha-inicio').value = info.startStr;
             document.getElementById('input-fecha-fin').value = info.endStr;
@@ -89,38 +99,28 @@ function initCalendar() {
             myModal.show();
         },
 
-        // B. DETALLES: Al tocar un evento existente
+        // Click Evento
         eventClick: function(info) {
-            // Llenar datos visuales
             document.getElementById('detalle-titulo').innerText = info.event.title;
             const inicio = info.event.start.toLocaleDateString();
             const fin = info.event.end ? info.event.end.toLocaleDateString() : inicio;
             document.getElementById('detalle-fechas').innerText = `${inicio} - ${fin}`;
             document.getElementById('detalle-id').value = info.event.id;
 
-            // --- <<< NUEVO: SEGURIDAD DE PROPIETARIO >>> ---
-            
-            // 1. Obtenemos el email guardado en el evento (extendedProps)
             const emailDueno = info.event.extendedProps.userEmail;
-            // 2. Obtenemos mi email actual
             const miEmail = auth.currentUser.email;
 
-            // 3. Comparamos
             if (emailDueno === miEmail) {
-                // SOY EL DUEÑO: Muestro el botón
                 btnBorrar.classList.remove('d-none');
             } else {
-                // NO SOY EL DUEÑO: Oculto el botón
                 btnBorrar.classList.add('d-none');
             }
-            // ------------------------------------------------
 
             const modalDetalles = new bootstrap.Modal(document.getElementById('modalDetalles'));
             modalDetalles.show();
         }
     });
 
-    // C. LEER DATOS REALES
     onSnapshot(collection(db, "reservas"), (snapshot) => {
         calendar.removeAllEvents();
         snapshot.forEach((doc) => {
@@ -131,10 +131,7 @@ function initCalendar() {
                 start: data.start,
                 end: data.end, 
                 allDay: true,
-                // --- <<< NUEVO: GUARDAMOS EL EMAIL EN EL EVENTO >>> ---
-                extendedProps: {
-                    userEmail: data.userEmail // FullCalendar guarda datos extra aquí
-                },
+                extendedProps: { userEmail: data.userEmail },
                 backgroundColor: '#0d6efd',
                 borderColor: '#0d6efd'
             });
@@ -144,17 +141,15 @@ function initCalendar() {
     calendar.render();
 }
 
-// 8. GUARDAR
+// 7. GUARDAR CON SWEETALERT
 btnGuardar.addEventListener('click', async () => {
     const inicio = document.getElementById('input-fecha-inicio').value;
     const finUsuario = document.getElementById('input-fecha-fin').value;
     const titulo = document.getElementById('txt-titulo').value;
 
-    if (!titulo) return alert("Escribe quién eres.");
-    if (!inicio || !finUsuario) return alert("Faltan fechas.");
-    if (inicio > finUsuario) return alert("Fechas inválidas.");
-
-    // Ajuste fecha fin (+1 día visual)
+    if (!titulo) return Swal.fire('Falta info', 'Escribe quién eres', 'warning');
+    
+    // Ajuste fecha
     const partes = finUsuario.split('-'); 
     const fechaObj = new Date(partes[0], partes[1] - 1, partes[2]); 
     fechaObj.setDate(fechaObj.getDate() + 1);
@@ -163,7 +158,7 @@ btnGuardar.addEventListener('click', async () => {
     const dia = String(fechaObj.getDate()).padStart(2, '0');
     const finReal = `${anio}-${mes}-${dia}`;
 
-    // Validación Conflictos
+    // Validación
     const eventos = calendar.getEvents();
     const nuevoInicio = new Date(inicio + "T00:00:00");
     const nuevoFin = new Date(finReal + "T00:00:00");
@@ -178,7 +173,14 @@ btnGuardar.addEventListener('click', async () => {
         return (nuevoInicio < evFin && nuevoFin > evInicio);
     });
 
-    if (hayConflicto) return alert("¡Conflicto! Días ocupados.");
+    if (hayConflicto) {
+        return Swal.fire({
+            icon: 'error',
+            title: '¡Ocupado!',
+            text: 'Esas fechas ya están reservadas.',
+            confirmButtonColor: '#d33'
+        });
+    }
 
     try {
         await addDoc(collection(db, "reservas"), {
@@ -186,35 +188,62 @@ btnGuardar.addEventListener('click', async () => {
             start: inicio,
             end: finReal,
             allDay: true,
-            userEmail: auth.currentUser.email // Esto es lo que comparamos luego
+            userEmail: auth.currentUser.email
         });
         
-        alert("¡Guardado!");
+        // Cerrar modal primero
         const modalEl = document.getElementById('modalReserva');
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
         modalInstance.hide();
         document.getElementById('txt-titulo').value = "";
+
+        // ALERTA DE ÉXITO
+        Swal.fire({
+            icon: 'success',
+            title: '¡Listo!',
+            text: 'Reserva guardada correctamente',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
     } catch (error) {
         console.error(error);
-        alert("Error al guardar.");
+        Swal.fire('Error', 'No se pudo guardar', 'error');
     }       
 });
 
-// 9. BORRAR
+// 8. BORRAR CON CONFIRMACIÓN DE SWEETALERT
 btnBorrar.addEventListener('click', async () => {
     const idParaBorrar = document.getElementById('detalle-id').value;
     if (!idParaBorrar) return;
 
-    if (!confirm("¿Seguro que quieres borrar TU reserva?")) return;
+    // PREGUNTA CON SWEETALERT
+    const result = await Swal.fire({
+        title: '¿Eliminar reserva?',
+        text: "No podrás recuperar esta fecha.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, borrar',
+        cancelButtonText: 'Cancelar'
+    });
 
-    try {
-        await deleteDoc(doc(db, "reservas", idParaBorrar));
-        const modalEl = document.getElementById('modalDetalles');
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        modalInstance.hide();
-        alert("Reserva eliminada.");
-    } catch (error) {
-        console.error(error);
-        alert("No se pudo borrar.");
+    if (result.isConfirmed) {
+        try {
+            await deleteDoc(doc(db, "reservas", idParaBorrar));
+            
+            const modalEl = document.getElementById('modalDetalles');
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance.hide();
+            
+            Swal.fire(
+                '¡Eliminado!',
+                'La reserva ha sido borrada.',
+                'success'
+            );
+        } catch (error) {
+            Swal.fire('Error', 'No se pudo borrar', 'error');
+        }
     }
 });

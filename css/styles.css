@@ -1,4 +1,4 @@
-/* css/styles.css */
+
 
 /* 1. IMPORTAR FUENTE (Poppins) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -103,3 +103,39 @@ h1, h2, h3, h4, h5 {
 .btn-danger {
     border-radius: 50px;
    } 
+
+   /* css/styles.css - Agrega esto al final o modifica si ya existe */
+
+/* 1. LIMITAR EL ANCHO (Para que no ocupe toda la pantalla en PC) */
+.container-app {
+    /* ... (mantén lo que ya tenías de glassmorphism: background, backdrop-filter, etc.) ... */
+    
+    /* 👇 AGREGAMOS ESTO PARA CONTROLAR EL TAMAÑO 👇 */
+    max-width: 900px; /* Ancho máximo elegante */
+    margin-left: auto; /* Auto margen izquierda */
+    margin-right: auto; /* Auto margen derecha = CENTRADO */
+}
+
+/* 2. AJUSTAR ALTURA DEL CARRUSEL */
+/* Para que no sea tan alto y se vea bien en celular */
+.carousel-item img {
+    height: 250px !important; /* Reducimos de 300 a 250px */
+    object-fit: cover;
+}
+
+/* 3. ARREGLO PARA CELULARES (Evitar zoom y deformación) */
+/* Esto evita que el navegador haga zoom cuando tocas un input */
+input, select, textarea {
+    font-size: 16px !important; 
+}
+
+/* Ajuste específico para el calendario en móvil */
+@media (max-width: 768px) {
+    .fc-toolbar-title {
+        font-size: 1.2rem !important; /* Título del mes más pequeño */
+    }
+    .fc-header-toolbar {
+        flex-direction: column; /* Botones arriba, título abajo para que quepan */
+        gap: 10px;
+    }
+}
