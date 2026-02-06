@@ -174,59 +174,85 @@ function initCalendar() {
         calendar.removeAllEvents();
         snapshot.forEach((doc) => {
             const data = doc.data();
+            let colorEvento = '#0d6efd'; 
+            if (data.tipo === 'completa') {
+            colorEvento = '#dc3545';
+            }
+
+
             calendar.addEvent({
-                id: doc.id,
-                title: data.title,
-                start: data.start,
-                end: data.end, 
-                allDay: true,
-                extendedProps: { userEmail: data.userEmail },
-                backgroundColor: '#0d6efd',
-                borderColor: '#0d6efd'
-            });
+            id: doc.id,
+            title: data.title + (data.tipo === 'completa' ? ' (🏠)' : ' (👤)'), // Iconito visual
+            start: data.start,
+            end: data.end, 
+            allDay: true,
+            // 👇 Guardamos el tipo en extendedProps para usarlo luego
+            extendedProps: { 
+                userEmail: data.userEmail,
+                tipo: data.tipo 
+            },
+            backgroundColor: colorEvento,
+            borderColor: colorEvento
         });
     });
+});
 
     calendar.render();
 }
 
-// 7. GUARDAR CON SWEETALERT
+// LÓGICA DE GUARDADO CON VALIDACIÓN PARCIAL/COMPLETA
 btnGuardar.addEventListener('click', async () => {
     const inicio = document.getElementById('input-fecha-inicio').value;
     const finUsuario = document.getElementById('input-fecha-fin').value;
     const titulo = document.getElementById('txt-titulo').value;
+    const tipo = document.getElementById('select-tipo').value; // 'completa' o 'parcial'
 
-    if (!titulo) return Swal.fire('Falta info', 'Escribe quién eres', 'warning');
+    if (!titulo || !inicio || !finUsuario) return Swal.fire('Falta info', 'Llena todos los campos', 'warning');
     
-    // Ajuste fecha
+    // Ajuste fecha fin (+1 día para FullCalendar)
     const partes = finUsuario.split('-'); 
     const fechaObj = new Date(partes[0], partes[1] - 1, partes[2]); 
     fechaObj.setDate(fechaObj.getDate() + 1);
-    const anio = fechaObj.getFullYear();
-    const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
-    const dia = String(fechaObj.getDate()).padStart(2, '0');
-    const finReal = `${anio}-${mes}-${dia}`;
+    const finReal = fechaObj.toISOString().split('T')[0];
 
-    // Validación
+    // Validación de fechas y lógica de tipos
     const eventos = calendar.getEvents();
     const nuevoInicio = new Date(inicio + "T00:00:00");
     const nuevoFin = new Date(finReal + "T00:00:00");
 
+    // REGLA DE ORO:
+    // 1. Si ya hay una "Completa", nadie pasa.
+    // 2. Si yo quiero "Completa", no puede haber NADA (ni parcial ni completa).
+    // 3. Si yo quiero "Parcial" y ya hay "Parcial", SÍ PASA.
+
     const hayConflicto = eventos.some(evento => {
         const evInicio = evento.start;
-        let evFin = evento.end;
-        if (!evFin) {
-            evFin = new Date(evInicio);
-            evFin.setDate(evFin.getDate() + 1);
-        }
-        return (nuevoInicio < evFin && nuevoFin > evInicio);
+        let evFin = evento.end || new Date(evInicio.getTime() + 86400000); // Si es de 1 día
+
+        // ¿Chocan las fechas?
+        const choqueFechas = (nuevoInicio < evFin && nuevoFin > evInicio);
+
+        if (!choqueFechas) return false; // Si no chocan fechas, no hay problema.
+
+        // SI CHOCAN FECHAS, VERIFICAMOS LOS TIPOS:
+        const tipoExistente = evento.extendedProps.tipo || 'parcial'; // Asumimos parcial si no tiene dato antiguo
+        
+        // Caso 1: La reserva existente es COMPLETA (Bloqueo total)
+        if (tipoExistente === 'completa') return true; 
+
+        // Caso 2: La reserva NUEVA es COMPLETA (Necesito todo vacío)
+        if (tipo === 'completa') return true;
+
+        // Caso 3: Ambas son Parciales (EXISTE = Parcial, NUEVA = Parcial)
+        // Aquí retornamos FALSE porque NO hay conflicto, se pueden mezclar.
+        return false; 
     });
 
     if (hayConflicto) {
         return Swal.fire({
             icon: 'error',
-            title: '¡Ocupado!',
-            text: 'Esas fechas ya están reservadas.',
+            title: 'No disponible',
+            text: 'La fecha está ocupada por una reserva Completa o intentas reservar Completa sobre una Parcial.',
             confirmButtonColor: '#d33'
         });
     }
@@ -237,20 +263,21 @@ btnGuardar.addEventListener('click', async () => {
             start: inicio,
             end: finReal,
             allDay: true,
-            userEmail: auth.currentUser.email
+            userEmail: auth.currentUser.email,
+            tipo: tipo // 👇 Guardamos el tipo en la base de datos
         });
         
-        // Cerrar modal primero
         const modalEl = document.getElementById('modalReserva');
         const modalInstance = bootstrap.Modal.getInstance(modalEl);
         modalInstance.hide();
+        
+        // Limpiar campos
         document.getElementById('txt-titulo').value = "";
-
-        // ALERTA DE ÉXITO
+        
         Swal.fire({
             icon: 'success',
-            title: '¡Listo!',
-            text: 'Reserva guardada correctamente',
+            title: '¡Reservado!',
+            text: `Reserva ${tipo} guardada con éxito.`,
             timer: 2000,
             showConfirmButton: false
         });

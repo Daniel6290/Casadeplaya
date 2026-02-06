@@ -94,13 +94,14 @@
     </div>
     
 
-    <div class="modal fade" id="modalReserva" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalReserva" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-dark text-white border-secondary">
                 <div class="modal-header border-secondary">
                     <h5 class="modal-title text-primary">🏖️ Nueva Reserva</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+                
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-6">
@@ -112,11 +113,24 @@
                             <input type="date" id="input-fecha-fin" class="form-control">
                         </div>
                     </div>
+                    
                     <div class="mb-3">
                         <label class="form-label">¿Quién aparta?</label>
                         <input type="text" id="txt-titulo" class="form-control" placeholder="Ej: Familia Pérez" required>
                     </div>
-                </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-warning fw-bold">Tipo de Reserva:</label>
+                        <select id="select-tipo" class="form-select bg-dark text-white border-secondary">
+                            <option value="parcial">👤 Parcial (Se puede compartir)</option>
+                            <option value="completa">🏠 Casa Completa (Nadie más entra)</option>
+                        </select>
+                        <small class="text-white-50 mt-1 d-block">
+                            * "Completa" bloqueará el día entero para otros.
+                        </small>
+                    </div>
+                    </div>
+
                 <div class="modal-footer border-secondary">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="btn-guardar">Confirmar</button>
@@ -124,7 +138,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="modalDetalles" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-dark text-white border-secondary">
