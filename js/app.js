@@ -2,7 +2,7 @@
 
 // 1. IMPORTS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } 
     from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -32,6 +32,7 @@ const btnLogout = document.getElementById('btn-logout');
 const userName = document.getElementById('user-name');
 const btnGuardar = document.getElementById('btn-guardar');
 const btnBorrar = document.getElementById('btn-borrar');
+const btnRegister = document.getElementById('btn-register');
 
 // 4. LOGIN CON SWEETALERT ERROR
 formLogin.addEventListener('submit', async (e) => {
@@ -48,6 +49,54 @@ formLogin.addEventListener('submit', async (e) => {
         });
     }
 });
+
+// 2. NUEVA LÓGICA PARA EL BOTÓN "REGISTRARSE" (Agrega esto debajo)
+if (btnRegister) {
+    btnRegister.addEventListener('click', async () => {
+        const email = txtEmail.value;
+        const password = txtPassword.value;
+
+        // Validación simple: que no estén vacíos
+        if (!email || !password) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Faltan datos',
+                text: 'Escribe un correo y contraseña para crear tu cuenta.',
+                confirmButtonColor: '#d4af37'
+            });
+        }
+
+        try {
+            // Intentamos crear el usuario en Firebase
+            await createUserWithEmailAndPassword(auth, email, password);
+            
+            // Si funciona, mostramos éxito (Firebase iniciará sesión solo)
+            Swal.fire({
+                icon: 'success',
+                title: '¡Bienvenido!',
+                text: 'Cuenta creada exitosamente.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+        } catch (error) {
+            console.error(error);
+            let mensaje = "No se pudo crear la cuenta.";
+
+            // Errores comunes traducidos
+            if (error.code === 'auth/email-already-in-use') mensaje = "Ese correo ya está registrado.";
+            if (error.code === 'auth/weak-password') mensaje = "La contraseña es muy corta (mínimo 6 letras).";
+            if (error.code === 'auth/invalid-email') mensaje = "El correo no es válido.";
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de registro',
+                text: mensaje,
+                confirmButtonColor: '#d33'
+            });
+        }
+    });
+}
 
 // 5. SESIÓN
 onAuthStateChanged(auth, (user) => {
