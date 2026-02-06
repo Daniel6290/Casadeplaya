@@ -127,6 +127,7 @@ function initCalendar() {
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'es',
+        firstDay: 1,
         headerToolbar: {
             left: 'prev,next', // Quitamos 'today' para ahorrar espacio en móvil
             center: 'title',
