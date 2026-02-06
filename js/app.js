@@ -265,3 +265,18 @@ imagenesGaleria.forEach(img => {
         }
     });
 });
+
+const btnFab = document.getElementById('btn-fab');
+
+if(btnFab) {
+    btnFab.addEventListener('click', () => {
+        // 1. Limpiamos los campos para que no tengan datos viejos
+        document.getElementById('input-fecha-inicio').value = '';
+        document.getElementById('input-fecha-fin').value = '';
+        document.getElementById('txt-titulo').value = '';
+
+        // 2. Abrimos el modal manualmente
+        const myModal = new bootstrap.Modal(document.getElementById('modalReserva'));
+        myModal.show();
+    });
+}
