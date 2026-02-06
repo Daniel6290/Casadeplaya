@@ -39,16 +39,14 @@
     </div>
 
 
-    <div id="section-app" class="col-12 d-none">
+<div id="section-app" class="col-12 d-none">
         
         <nav class="navbar navbar-dark w-100 py-3 px-4 mb-5" 
              style="background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(255,255,255,0.1);">
-            
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <h2 class="m-0 text-white fs-4 fw-bold">
                     Hola, <span id="user-name" style="color: #fcd34d;"></span> 👋
                 </h2>
-                
                 <button id="btn-logout" class="btn btn-outline-danger rounded-pill px-4 fw-bold">
                     Cerrar Sesión 🚪
                 </button>
@@ -56,56 +54,40 @@
         </nav>
 
         <div id="carruselCasa" class="carousel slide mb-5 shadow-lg mx-auto" data-bs-ride="carousel" style="max-width: 900px; border-radius: 20px; overflow: hidden;">
-            
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carruselCasa" data-bs-slide-to="0" class="active"></button>
                 <button type="button" data-bs-target="#carruselCasa" data-bs-slide-to="1"></button>
                 <button type="button" data-bs-target="#carruselCasa" data-bs-slide-to="2"></button>
             </div>
-
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop" 
-                         class="d-block w-100 img-galeria" alt="Vista" style="height: 500px; object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3">
-                        <h5>🌊 Vista al Mar (Clic para ver)</h5>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop" class="d-block w-100 img-galeria" alt="Vista" style="height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3"><h5>🌊 Vista al Mar</h5></div>
                 </div>
                 <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?q=80&w=1974&auto=format&fit=crop" 
-                         class="d-block w-100 img-galeria" alt="Casa" style="height: 500px; object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3">
-                        <h5>🏡 La Casa</h5>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?q=80&w=1974&auto=format&fit=crop" class="d-block w-100 img-galeria" alt="Casa" style="height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3"><h5>🏡 La Casa</h5></div>
                 </div>
                 <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1572331165267-854da2b00cc6?q=80&w=2070&auto=format&fit=crop" 
-                         class="d-block w-100 img-galeria" alt="Piscina" style="height: 500px; object-fit: cover;">
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3">
-                        <h5>🏊 Piscina Privada</h5>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1572331165267-854da2b00cc6?q=80&w=2070&auto=format&fit=crop" class="d-block w-100 img-galeria" alt="Piscina" style="height: 500px; object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded-3"><h5>🏊 Piscina Privada</h5></div>
                 </div>
             </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#carruselCasa" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carruselCasa" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carruselCasa" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carruselCasa" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
         </div>
 
         <div class="container-app mx-auto mb-5" style="max-width: 800px;">
             <div id="calendar"></div>
         </div>
 
+        <button id="btn-fab" class="btn btn-primary rounded-circle shadow-lg position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center" 
+                style="width: 60px; height: 60px; z-index: 1000; border: 2px solid white;">
+            <span class="fs-1 lh-1 pb-1">+</span>
+        </button>
+
     </div>
     
-    </div> <button id="btn-fab" class="btn btn-primary rounded-circle shadow-lg position-fixed bottom-0 end-0 m-4 d-flex align-items-center justify-content-center" 
-            style="width: 60px; height: 60px; z-index: 1000; border: 2px solid white;">
-        <span class="fs-1 lh-1 pb-1">+</span>
-    </button>
-
 
     <div class="modal fade" id="modalReserva" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
