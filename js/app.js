@@ -201,7 +201,7 @@ function initCalendar() {
     calendar.render();
 }
 
-// LÓGICA DE GUARDADO CON VALIDACIÓN PARCIAL/COMPLETA
+// LÓGICA DE GUARDADO CON VALIDACIÓN DE FECHA PASADA Y TIPOS
 btnGuardar.addEventListener('click', async () => {
     const inicio = document.getElementById('input-fecha-inicio').value;
     const finUsuario = document.getElementById('input-fecha-fin').value;
@@ -210,16 +210,35 @@ btnGuardar.addEventListener('click', async () => {
 
     if (!titulo || !inicio || !finUsuario) return Swal.fire('Falta info', 'Llena todos los campos', 'warning');
     
+    // 👇👇👇 AQUÍ ESTÁ LA NUEVA VALIDACIÓN (NO PASADO) 👇👇👇
+    const fechaInicioObj = new Date(inicio + "T00:00:00"); // Forzamos hora 00:00
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0); // Le quitamos la hora al día de hoy para comparar solo fechas
+
+    if (fechaInicioObj < hoy) {
+        return Swal.fire({
+            icon: 'error',
+            title: '¡Fecha Inválida!',
+            text: 'No puedes viajar al pasado 🕰️. Por favor elige una fecha futura o el día de hoy.',
+            confirmButtonColor: '#d33'
+        });
+    }
+    // 👆👆👆 FIN DE LA VALIDACIÓN 👆👆👆
+
+
     // Ajuste fecha fin (+1 día para FullCalendar)
     const partes = finUsuario.split('-'); 
     const fechaObj = new Date(partes[0], partes[1] - 1, partes[2]); 
     fechaObj.setDate(fechaObj.getDate() + 1);
-    const finReal = fechaObj.toISOString().split('T')[0];
+    const anio = fechaObj.getFullYear();
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaObj.getDate()).padStart(2, '0');
+    const finReal = `${anio}-${mes}-${dia}`; // Formato manual para evitar errores de zona horaria
 
     // Validación de fechas y lógica de tipos
     const eventos = calendar.getEvents();
     const nuevoInicio = new Date(inicio + "T00:00:00");
-    const nuevoFin = new Date(finReal + "T00:00:00");
+    // const nuevoFin = new Date(finReal + "T00:00:00"); // Usamos el finReal calculado
 
     // REGLA DE ORO:
     // 1. Si ya hay una "Completa", nadie pasa.
@@ -228,15 +247,23 @@ btnGuardar.addEventListener('click', async () => {
 
     const hayConflicto = eventos.some(evento => {
         const evInicio = evento.start;
-        let evFin = evento.end || new Date(evInicio.getTime() + 86400000); // Si es de 1 día
+        let evFin = evento.end;
+        
+        // Corrección por si el evento de 1 día no tiene fecha final en FullCalendar
+        if (!evFin) {
+            evFin = new Date(evInicio);
+            evFin.setDate(evFin.getDate() + 1);
+        }
 
-        // ¿Chocan las fechas?
-        const choqueFechas = (nuevoInicio < evFin && nuevoFin > evInicio);
+        // ¿Chocan las fechas? (Lógica de intersección de rangos)
+        const choqueFechas = (nuevoInicio < evFin && new Date(finReal + "T00:00:00") > evInicio);
 
         if (!choqueFechas) return false; // Si no chocan fechas, no hay problema.
 
         // SI CHOCAN FECHAS, VERIFICAMOS LOS TIPOS:
-        const tipoExistente = evento.extendedProps.tipo || 'parcial'; // Asumimos parcial si no tiene dato antiguo
+        // Obtenemos el tipo del evento existente (si no tiene, asumimos 'parcial' por seguridad)
+        const props = evento.extendedProps || {};
+        const tipoExistente = props.tipo || 'parcial'; 
         
         // Caso 1: La reserva existente es COMPLETA (Bloqueo total)
         if (tipoExistente === 'completa') return true; 
