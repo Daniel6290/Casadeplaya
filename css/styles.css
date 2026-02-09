@@ -1,48 +1,66 @@
-/* css/styles.css - VERSIÓN FINAL: ATARDECER + CALENDARIO GRANDE Y BLANCO 🌅 */
+/* css/styles.css - VERSIÓN: ARENA DORADA + TÍTULO CAFÉ (ELEGANTE) 🐫☕ */
 
-/* 1. IMPORTAR FUENTE (Poppins) */
+/* 1. IMPORTAR FUENTE */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-/* 2. ESTILOS DEL CUERPO (AMBIENTE CÁLIDO) */
+/* 2. ESTILOS DEL CUERPO (BEIGE INTERMEDIO - ARENA DORADA) */
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #2a1b15; /* Tierra oscura */
-    color: #fdf4dc; /* Texto general crema suave */
     
-    /* GRADIENTE CÁLIDO */
-    background-image: linear-gradient(to bottom, rgba(45, 25, 20, 0.9), rgba(100, 50, 30, 0.85)), url('https://images.unsplash.com/photo-1473116763249-563815b507d6?q=80&w=2070&auto=format&fit=crop');
+    /* Fondo base: BEIGE ARENA */
+    background-color: #e3d5ca; 
+    
+    /* Texto: Café Tabaco (Contrastado y elegante) */
+    color: #4a3b32; 
+    
+    /* Gradiente para dar textura de arena suave */
+    background-image: linear-gradient(to bottom, rgba(227, 213, 202, 0.92), rgba(214, 192, 179, 0.95)), url('https://images.unsplash.com/photo-1473116763249-563815b507d6?q=80&w=2070&auto=format&fit=crop');
+    
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     min-height: 100vh;
 }
 
-/* 3. TÍTULOS */
+/* 3. TÍTULOS (Café Oscuro) */
 h1, h2, h3, h4, h5 {
     font-weight: 600;
-    color: #ffecd1; 
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-}
-.text-shadow {
-    text-shadow: 0 4px 15px rgba(0,0,0,0.9);
+    color: #3e2723; /* Café casi negro */
+    text-shadow: none; 
 }
 
-/* 4. NAVBAR GLASS */
+.text-shadow {
+    /* Sombra solo para textos sobre fotos */
+    text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    color: #fff !important; 
+}
+
+/* 4. NAVBAR GLASS (Blanco Hielo) */
 #navbar-glass {
-    background: linear-gradient(to bottom, rgba(30, 15, 10, 0.9), transparent);
+    background: rgba(255, 255, 255, 0.4); 
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.3);
     transition: all 0.3s ease;
 }
+/* Forzamos texto oscuro en el navbar */
+#navbar-glass h2, #navbar-glass span {
+    color: #3e2723 !important;
+    text-shadow: none !important;
+}
 
-/* 5. EFECTO CRISTAL CÁLIDO (Cajas Login y Calendario) */
+/* 5. EFECTO CRISTAL (CAJAS BLANCAS LECHOSAS) */
 .card, .container-app {
-    background: rgba(35, 20, 15, 0.9) !important; /* Chocolate oscuro casi sólido */
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(222, 184, 135, 0.1); 
+    /* Blanco lechoso (Milky White) */
+    background: rgba(255, 255, 255, 0.65) !important; 
+    
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.8); 
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    
+    /* Sombra café suave */
+    box-shadow: 0 20px 40px rgba(62, 39, 35, 0.15); 
     padding: 25px;
     
-    /* 👇 ESTO HACE EL CALENDARIO MÁS ANCHO 👇 */
     max-width: 1100px !important; 
     margin-left: auto;
     margin-right: auto;
@@ -52,7 +70,6 @@ h1, h2, h3, h4, h5 {
 .img-hero {
     height: 65vh; 
     object-fit: cover;
-    filter: brightness(0.9) sepia(0.1); 
     transition: transform 0.5s ease;
 }
 .img-galeria:hover {
@@ -61,38 +78,35 @@ h1, h2, h3, h4, h5 {
 
 /* Iconos de comodidades */
 .amenity-icon {
-    opacity: 0.8;
-    color: #fdf4dc;
+    opacity: 0.9;
+    color: #fff; /* Blanco sobre la foto */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.8);
     transition: all 0.3s ease;
-    cursor: default;
 }
 .amenity-icon:hover {
-    opacity: 1;
     transform: translateY(-5px);
     color: #f4a261;
 }
 
-/* 7. CALENDARIO (GRANDE Y BLANCO) */
+/* 7. CALENDARIO (ESTILO CAFÉ MOKA) */
+.fc { font-size: 1.1rem !important; }
 
-/* Tamaño de letra general aumentado */
-.fc {
-    font-size: 1.1rem !important; 
-}
-
-/* Título del Mes (Febrero 2026) - Naranja Arena */
+/* Título del Mes - CAMBIO: CAFÉ ELEGANTE (NO NARANJA) */
 .fc-toolbar-title {
-    color: #f4a261 !important; 
+    color: #4e342e !important; /* Café Moka Intenso */
     font-size: 2.5rem !important; 
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     text-transform: capitalize;
     letter-spacing: 1px;
 }
 
-/* Cabecera de días (LUN, MAR...) - BLANCO PURO */
+/* Cabecera de días (LUN, MAR...) - Café Medio */
 .fc-theme-standard th {
     background: transparent !important;
     border: none !important;
-    color: #ffffff !important; /* ⚪ BLANCO */
+    
+    color: #5d4037 !important; /* Café Tabaco */
+    
     padding-bottom: 20px !important;
     font-weight: 700 !important;
     text-transform: uppercase;
@@ -100,34 +114,33 @@ h1, h2, h3, h4, h5 {
     letter-spacing: 2px;
 }
 
-/* Números de los días (1, 2, 3...) - BLANCO PURO */
+/* Números de los días (1, 2, 3...) - Café Oscuro */
 .fc-daygrid-day-number {
-    color: #ffffff !important; /* ⚪ BLANCO */
-    font-size: 1.2rem !important; /* Números grandes */
+    color: #3e2723 !important; /* Café Espresso */
+    font-size: 1.2rem !important;
     padding: 8px !important;
-    font-weight: 500;
-    opacity: 0.9;
+    font-weight: 600;
 }
 
-/* Bordes casi invisibles */
+/* Líneas divisorias */
 .fc-theme-standard td, 
 .fc-theme-standard .fc-scrollgrid {
-    border-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(93, 64, 55, 0.1) !important; 
 }
 
 /* Hover en los días */
 .fc-daygrid-day:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
     cursor: pointer;
 }
 
 /* El día de HOY */
 .fc-day-today {
-    background: rgba(231, 111, 81, 0.15) !important;
+    background: rgba(141, 110, 99, 0.2) !important; /* Café suave */
 }
 .fc-day-today .fc-daygrid-day-number {
-    background-color: #e76f51; /* Terracota */
-    color: #fff !important;
+    background-color: #6d4c41; /* Café Bronce */
+    color: #fff !important; 
     border-radius: 50%;
     width: 35px;
     height: 35px;
@@ -135,8 +148,6 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     justify-content: center;
     margin: 4px;
-    font-weight: bold;
-    opacity: 1;
 }
 
 /* Eventos (Reservas) */
@@ -144,79 +155,38 @@ h1, h2, h3, h4, h5 {
     border: none !important;
     border-radius: 6px !important;
     padding: 4px 10px !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 2px !important;
+    color: #fff !important; 
 }
 
-/* Botones de navegación */
+/* Botones de navegación (Flechas oscuras) */
 .fc-button-primary {
     background-color: transparent !important;
-    border: 1px solid rgba(255,255,255, 0.3) !important;
-    color: #ffffff !important;
+    border: 1px solid rgba(62, 39, 35, 0.3) !important;
+    color: #3e2723 !important; /* Flechas Café Oscuro */
     border-radius: 50px !important;
     padding: 8px 25px !important;
     text-transform: uppercase;
     font-weight: 600;
 }
 .fc-button-primary:hover {
-    background-color: rgba(255,255,255, 0.1) !important;
-    border-color: #ffffff !important;
+    background-color: rgba(62, 39, 35, 0.1) !important;
+    border-color: #3e2723 !important;
 }
 
 /* 8. FORMULARIOS */
 .form-control, .form-select {
-    background-color: rgba(20, 10, 5, 0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.7) !important; 
+    border: 1px solid rgba(93, 64, 55, 0.2) !important; 
+    color: #3e2723 !important;
 }
 .form-control:focus {
-    background-color: rgba(30, 15, 10, 0.7) !important;
-    border-color: #f4a261 !important;
-    box-shadow: 0 0 0 0.25rem rgba(244, 162, 97, 0.2) !important;
+    background-color: #fff !important;
+    border-color: #6d4c41 !important; /* Borde Café */
+    box-shadow: 0 0 0 0.25rem rgba(109, 76, 65, 0.2) !important;
 }
 
-/* Botones Principales */
-.btn-primary {
-    background-color: #e76f51;
-    border: none;
-    color: white;
-    font-weight: 600;
-    padding: 12px 30px;
-    border-radius: 50px;
-    transition: all 0.3s;
-}
-.btn-primary:hover {
-    background-color: #d65a3b;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 111, 81, 0.4);
-}
-
-/* Botón Rojo */
-.btn-outline-danger {
-    color: #ffadad;
-    border-color: #ffadad;
-}
-.btn-outline-danger:hover {
-    background-color: #d65a3b;
-    border-color: #d65a3b;
-    color: white;
-}
-
-/* 9. MÓVIL */
-@media (max-width: 768px) {
-    .img-hero { height: 50vh !important; }
-    .container-app {
-        padding: 15px;
-        width: 100% !important;
-        max-width: 100% !important; /* En celular sí ocupa todo */
-        border-radius: 20px 20px 0 0; 
-    }
-    .fc-toolbar-title { font-size: 1.5rem !important; }
-    .fc-header-toolbar { flex-direction: column; gap: 15px; }
-    #navbar-glass { background: rgba(20, 10, 5, 0.9); }
-}
-
-/* 10. FIX ZOOM */
-input, select, textarea { font-size: 16px !important; }
+/* Botones
