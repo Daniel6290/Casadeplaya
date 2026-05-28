@@ -2,19 +2,17 @@
 
 // 1. IMPORTS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } 
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } 
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 2. CONFIGURACIÓN (Tus llaves)
 const firebaseConfig = {
-  apiKey: "AIzaSyCK24jfAypi_5cbpxUAoRqm5GpD0AztLmo",
-  authDomain: "casadeplaya-familia.firebaseapp.com",
-  projectId: "casadeplaya-familia",
-  storageBucket: "casadeplaya-familia.firebasestorage.app",
-  messagingSenderId: "8636762795",
-  appId: "1:8636762795:web:a88b8679e37ee03d6985ee"
+    apiKey: "AIzaSyCK24jfAypi_5cbpxUAoRqm5GpD0AztLmo",
+    authDomain: "casadeplaya-familia.firebaseapp.com",
+    projectId: "casadeplaya-familia",
+    storageBucket: "casadeplaya-familia.firebasestorage.app",
+    messagingSenderId: "8636762795",
+    appId: "1:8636762795:web:a88b8679e37ee03d6985ee"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -50,7 +48,7 @@ formLogin.addEventListener('submit', async (e) => {
     }
 });
 
-// 2. NUEVA LÓGICA PARA EL BOTÓN "REGISTRARSE" (Agrega esto debajo)
+// NUEVA LÓGICA PARA EL BOTÓN "REGISTRARSE"
 if (btnRegister) {
     btnRegister.addEventListener('click', async () => {
         const email = txtEmail.value;
@@ -94,6 +92,58 @@ if (btnRegister) {
                 text: mensaje,
                 confirmButtonColor: '#d33'
             });
+        }
+    });
+}
+
+// ==========================================
+// RECUPERACIÓN DE CONTRASEÑA (¡Lo nuevo que agregamos!)
+// ==========================================
+const btnOlvidePass = document.getElementById('btn-olvide-pass');
+if (btnOlvidePass) {
+    btnOlvidePass.addEventListener('click', async (e) => {
+        e.preventDefault(); 
+
+        // 1. Usamos SweetAlert para pedir el correo
+        const { value: email } = await Swal.fire({
+            title: 'Recuperar Contraseña',
+            text: 'Ingresa el correo de tu cuenta:',
+            input: 'email',
+            inputPlaceholder: 'tio@familia.com',
+            background: '#fdfbf7', // Fondo claro
+            color: '#4a403a',      // Texto oscuro
+            confirmButtonColor: '#e76f51', // Botón terracota
+            cancelButtonColor: '#6c757d',
+            showCancelButton: true,
+            confirmButtonText: 'Enviar enlace',
+            cancelButtonText: 'Cancelar'
+        });
+
+        // 2. Si el usuario escribió un correo y aceptó
+        if (email) {
+            try {
+                // Mandamos el correo usando Firebase 
+                await sendPasswordResetEmail(auth, email);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Correo Enviado!',
+                    text: 'Revisa tu bandeja de entrada (y spam). Te enviamos un enlace para crear una nueva contraseña.',
+                    background: '#fdfbf7',
+                    color: '#4a403a',
+                    confirmButtonColor: '#e76f51'
+                });
+            } catch (error) {
+                console.error("Error al recuperar:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Hubo un error. Revisa que el correo esté bien escrito y que ya tengas una cuenta.',
+                    background: '#fdfbf7',
+                    color: '#4a403a',
+                    confirmButtonColor: '#e76f51'
+                });
+            }
         }
     });
 }
@@ -180,7 +230,6 @@ function initCalendar() {
             colorEvento = '#dc3545';
             }
 
-
             calendar.addEvent({
             id: doc.id,
             title: data.title + (data.tipo === 'completa' ? ' (🏠)' : ' (👤)'), // Iconito visual
@@ -238,12 +287,6 @@ btnGuardar.addEventListener('click', async () => {
     // Validación de fechas y lógica de tipos
     const eventos = calendar.getEvents();
     const nuevoInicio = new Date(inicio + "T00:00:00");
-    // const nuevoFin = new Date(finReal + "T00:00:00"); // Usamos el finReal calculado
-
-    // REGLA DE ORO:
-    // 1. Si ya hay una "Completa", nadie pasa.
-    // 2. Si yo quiero "Completa", no puede haber NADA (ni parcial ni completa).
-    // 3. Si yo quiero "Parcial" y ya hay "Parcial", SÍ PASA.
 
     const hayConflicto = eventos.some(evento => {
         const evInicio = evento.start;
@@ -261,7 +304,6 @@ btnGuardar.addEventListener('click', async () => {
         if (!choqueFechas) return false; // Si no chocan fechas, no hay problema.
 
         // SI CHOCAN FECHAS, VERIFICAMOS LOS TIPOS:
-        // Obtenemos el tipo del evento existente (si no tiene, asumimos 'parcial' por seguridad)
         const props = evento.extendedProps || {};
         const tipoExistente = props.tipo || 'parcial'; 
         
